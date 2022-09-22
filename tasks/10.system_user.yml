@@ -3,7 +3,7 @@
 
 - name: "[system_user] create Hotrod group"
   when:
-    - "hotrod_system_group !== 'root'"
+    - hotrod_system_group != "root"
   group:
     name: "{{ hotrod_system_group }}"
     state: present
@@ -11,7 +11,7 @@
 
 - name: "[system_user] create Hotrod user"
   when:
-    - "hotrod_system_user !== 'root'"
+    - hotrod_system_group != "root"
   user:
     name: "{{ hotrod_system_user }}"
     comment: "Hotrod system user"
