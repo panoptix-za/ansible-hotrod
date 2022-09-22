@@ -1,0 +1,55 @@
+---
+
+# First, remove the two agents
+
+- name: Remove agent1
+  hosts: localhost
+  roles:
+    - hotrod
+  vars_files:
+    - test_cluster_vars.yml
+  vars:
+    # agent1
+    hotrod_remove_agent: yes
+    hotrod_agent_id: ""
+    hotrod_agent_name: "agent1"
+
+- name: remove agent2
+  hosts: localhost
+  roles:
+    - hotrod
+  vars_files:
+    - test_cluster_vars.yml
+  vars:
+    # agent2
+    hotrod_remove_agent: yes
+    hotrod_agent_name: "agent2"
+    hotrod_agent_tags: ""
+
+# Then remove the server
+
+- name: remove Hotrod server
+  hosts: localhost
+  roles:
+    - hotrod
+  vars_files:
+    - test_cluster_vars.yml
+  vars:
+    # binary
+    hotrod_install_binary: no
+    hotrod_remove_binary: no
+
+    # server
+    hotrod_remove_server: yes
+
+# Finally, remove the binary
+
+- name: remove Hotrod binary
+  hosts: localhost
+  roles:
+    - hotrod
+  vars_files:
+    - test_cluster_vars.yml
+  vars:
+    # binary
+    hotrod_remove_binary: yes

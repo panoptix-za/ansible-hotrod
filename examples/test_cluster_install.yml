@@ -1,0 +1,64 @@
+---
+###############################################################################
+#
+#                           Hotrod Test Cluster
+#
+#           Install Hotrod Server and 2 dedicated agents. Note:
+#
+#             1. A hotrod_download_uri is required in test_cluster_vars.yml
+#
+#             2. Agents are co-located with server on same host
+#
+#             3. Agents use auto-enrollment for authentication
+#
+#             4. The server's internal agent is disabled,
+#                   because eval license allows only 2 agents
+#
+#             5. Most config is specified in test_cluster_vars.yml
+#
+#             6. Destroy cluster with test_cluster_destroy.yml playbook
+#
+###############################################################################
+
+# play 1
+
+- name: Install hotrod binary & server
+  hosts: localhost
+  roles:
+    - hotrod
+  vars_files:
+    - test_cluster_vars.yml
+  vars:
+    # server
+    hotrod_install_server: yes
+    hotrod_server_enable_server_agent: no
+
+# play 2
+
+- name: Install agent1, alongside server
+  hosts: localhost
+  roles:
+    - hotrod
+  vars_files:
+    - test_cluster_vars.yml
+  vars:
+    # agent1
+    hotrod_install_agent: yes
+    hotrod_agent_name: "agent1"
+    hotrod_agent_listen_address: "127.0.0.1:4041"
+    hotrod_agent_tags: "local"
+
+# play 3
+
+- name: Install agent2, alongside server
+  hosts: localhost
+  roles:
+    - hotrod
+  vars_files:
+    - test_cluster_vars.yml
+  vars:
+    # agent2
+    hotrod_install_agent: yes
+    hotrod_agent_name: "agent2"
+    hotrod_agent_listen_address: "127.0.0.1:4042"
+    hotrod_agent_tags: "local"

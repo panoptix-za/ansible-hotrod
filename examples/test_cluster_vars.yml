@@ -1,0 +1,57 @@
+##################### Download
+
+# note: provide a download URL here
+hotrod_download_uri: ""
+hotrod_download_uri_sha1: "{{ hotrod_download_uri }}.sha1"
+
+
+##################### General
+
+# note: both server and agent runs as this user
+hotrod_system_user: hotrod
+hotrod_system_group: hotrod
+
+
+##################### Hotrod binary
+
+hotrod_binary_install_directory: /opt/hotrod
+hotrod_binary_install_path: "{{ hotrod_binary_install_directory }}/hotrod"
+hotrod_binary_system_path: /usr/bin/hotrod
+
+
+##################### Hotrod server
+
+hotrod_server_staging_dir: /var/lib/hotrod-server
+hotrod_server_bind_address: 127.0.0.1:3000
+hotrod_server_log_retention_days: 30
+hotrod_server_systemd_unit_name: hotrod-server.service
+hotrod_server_systemd_unit_path: /lib/systemd/system/{{ hotrod_server_systemd_unit_name }}
+
+# server secrets
+hotrod_server_auto_enrollment_key: "anotherVerySecretSecret"
+hotrod_server_admin_init_password: "aVerySecretSecret"
+
+
+##################### Hotrod agents (common settings)
+
+# server location
+hotrod_agent_server_url: "http://{{ hotrod_server_bind_address }}"
+
+# identity (ID is not given, since we're using auto-enrollment)
+hotrod_agent_id: ""
+
+# general settings
+hotrod_agent_pipes_dir: "/var/lib/hotrod-agent-{{ hotrod_agent_name }}"
+hotrod_agent_poll_interval: "15"
+hotrod_agent_logs_interval: "5"
+hotrod_agent_metrics_interval: "60"
+hotrod_agent_scheduler_systemd: yes
+hotrod_agent_scheduler_agent: no
+
+# unit file
+hotrod_agent_systemd_unit_name: "hotrod-agent-{{ hotrod_agent_name }}.service"
+hotrod_agent_systemd_unit_path: "/lib/systemd/system/{{ hotrod_agent_systemd_unit_name }}"
+
+# secrets (these 2 authentication options are mutually exclusive)
+hotrod_agent_auto_enrollment_key: "{{ hotrod_server_auto_enrollment_key }}"
+hotrod_agent_api_key: ""
