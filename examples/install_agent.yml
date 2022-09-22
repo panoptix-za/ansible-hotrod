@@ -1,0 +1,37 @@
+---
+- name: Install Hotrod agent
+  hosts: localhost
+  roles:
+    - hotrod
+  vars:
+    # control
+    hotrod_download_uri: "<specify target URI>"
+    hotrod_download_uri_sha1: "{{ hotrod_download_uri }}.sha1"
+    hotrod_system_user: hotrod
+    hotrod_system_group: hotrod
+
+    # binary
+    hotrod_install_binary: yes
+    hotrod_binary_install_directory: /opt/hotrod
+    hotrod_binary_install_path: "{{ hotrod_binary_install_directory }}/hotrod"
+    hotrod_binary_system_path: /usr/bin/hotrod
+
+    # agent
+    #   this example uses auto-enrollment,
+    #   which means agent ID and API key is left empty
+    hotrod_install_agent: yes
+    hotrod_agent_id: ""
+    hotrod_agent_name: "agent1"
+    hotrod_agent_auto_enrollment_key: "{{ hotrod_server_auto_enrollment_key }}"
+    hotrod_agent_api_key: ""
+    hotrod_agent_listen_address: "127.0.0.1:4041"
+    hotrod_agent_pipes_dir: "/var/lib/hotrod-agent-{{hotrod_agent_name}}"
+    hotrod_agent_server_url: "http://127.0.0.1:3000"
+    hotrod_agent_poll_interval: "15"
+    hotrod_agent_tags: ""
+    hotrod_agent_logs_interval: "5"
+    hotrod_agent_metrics_interval: "60"
+    hotrod_agent_scheduler_systemd: yes
+    hotrod_agent_scheduler_agent: no
+    hotrod_agent_systemd_unit_name: "hotrod-agent-{{hotrod_agent_name}}.service"
+    hotrod_agent_systemd_unit_path: "/lib/systemd/system/{{ hotrod_agent_systemd_unit_name }}"

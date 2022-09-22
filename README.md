@@ -11,6 +11,9 @@ This role supports Ubuntu 18.04 and 20.04.
 
 `./tasks/preflight.yml` will abort the playbook if the target system is not supported.
 
+## Usage
+
+See [./exampes](./examples) for installing different Hotrod components.
 
 ## Variables
 
@@ -57,6 +60,15 @@ If yes, installs and configures Hotrod agent. Implies `hotrod_install_binary: ye
 
 See [./defaults/main.yml](./defaults/main.yml) for customizing the Hotrod installation. Variables are documented, and most have reasonable defaults.
 
+## Uninstall feature
+
+The `hotrod_remove_*` variables can be used to remove some or all components. They are provided for easily cleanup on test systems, and as a reference for removing components, but **should not be used** on production Hotrod clusters.
+
+Note that:
+
+- `hotrod_remove_*` are mutually exclusive with their `hotrod_install_*` counterparts
+- `hotrod_system_user` and `hotrod_system_group` will only be removed if both values match "`hotrod`", to avoid undesirable effects when using non-defaults
+- `hotrod_remove_server` and `hotrod_remove_agent` will **destroy data directories!**
 
 ## Licence
 

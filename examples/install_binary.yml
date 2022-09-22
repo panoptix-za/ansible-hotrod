@@ -1,0 +1,17 @@
+---
+- name: Install Hotrod binary only
+  hosts: localhost
+  roles:
+    - hotrod
+  vars:
+    # control
+    hotrod_download_uri: "<specify target URI>"
+    hotrod_download_uri_sha1: "{{ hotrod_download_uri }}.sha1"
+    hotrod_system_user: hotrod
+    hotrod_system_group: hotrod
+
+    # binary
+    hotrod_install_binary: yes
+    hotrod_binary_install_directory: /opt/hotrod
+    hotrod_binary_install_path: "{{ hotrod_binary_install_directory }}/hotrod"
+    hotrod_binary_system_path: /usr/bin/hotrod

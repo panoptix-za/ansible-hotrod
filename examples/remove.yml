@@ -1,0 +1,42 @@
+---
+###############################################################################
+#
+#                               !! WARNING !!
+#
+#             Removing Hotrod server and/or agent with this playbook
+#             will destroy data directories. Perform a manual removal
+#             if You want to preserve server or agent data. See the
+#             tasks/remove_*.yml files for specific steps.
+# 
+###############################################################################
+
+- name: Remove all Hotrod components
+  hosts: localhost
+  roles:
+    - hotrod
+  vars:
+    # control (system user+group required for uninstall)
+    hotrod_system_user: hotrod
+    hotrod_system_group: hotrod
+
+    # remove agent
+    hotrod_install_agent: no
+    hotrod_remove_agent: yes
+    hotrod_agent_name: "agent1"
+    hotrod_agent_pipes_dir: "/var/lib/hotrod-agent-{{hotrod_agent_name}}"
+    hotrod_agent_systemd_unit_name: "hotrod-agent-{{hotrod_agent_name}}.service"
+    hotrod_agent_systemd_unit_path: "/lib/systemd/system/{{ hotrod_agent_systemd_unit_name }}"
+
+    # remove server
+    hotrod_install_server: no
+    hotrod_remove_server: yes
+    hotrod_server_staging_dir: /var/lib/hotrod-server
+    hotrod_server_systemd_unit_name: hotrod-server.service
+    hotrod_server_systemd_unit_path: /lib/systemd/system/{{ hotrod_server_systemd_unit_name }}
+
+    # remove binary
+    hotrod_install_binary: no
+    hotrod_remove_binary: yes
+    hotrod_binary_install_directory: /opt/hotrod
+    hotrod_binary_install_path: "{{ hotrod_binary_install_directory }}/hotrod"
+    hotrod_binary_system_path: /usr/bin/hotrod
