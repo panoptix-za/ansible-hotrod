@@ -1,0 +1,100 @@
+# File: 20.install_binary.yml - download and install the Hotrod binary
+
+############################################## download and verify Hotrod binary (on ansible host)
+
+- name: "[install_binary] create temporary directory"
+  tempfile:
+    state: directory
+    prefix: ansible-hotrod.
+  become: false
+  register: hotrod_temp_dir
+  tags: installation
+  delegate_to: 127.0.0.1
+
+
+- name: "[install_binary] Download Hotrod"
+  get_url:
+    url: "{{ hotrod_download_uri }}"
+    dest: "{{ hotrod_temp_dir.path }}/hotrod_linux_x86_64.gz"
+    checksum: "sha1:{{ lookup('url', hotrod_download_uri_sha1) }}"
+  delegate_to: 127.0.0.1
+
+
+- name: "[install_binary] extract binary"
+  ansible.builtin.command:
+    argv:
+      - "/bin/gzip"
+      - "-d"
+      - "{{ hotrod_temp_dir.path }}/hotrod_linux_x86_64.gz"
+  args:
+    creates: "{{ hotrod_temp_dir.path }}/hotrod_linux_x86_64"
+  delegate_to: 127.0.0.1
+
+############################################## install binary on target system
+
+- name: "[install_binary] create install directory"
+  ansible.builtin.file:
+    path: "{{hotrod_binary_install_directory}}"
+    state: directory
+    owner: "{{hotrod_system_user}}"
+    group: "{{hotrod_system_group}}"
+    mode: "0744"
+
+
+- name: "[install_binary] copy binary to target system"
+  copy:
+    src: "{{ hotrod_temp_dir.path }}/hotrod_linux_x86_64"
+    dest: "{{ hotrod_binary_install_path }}"
+    owner: "{{ hotrod_system_user }}"
+    group: "{{ hotrod_system_group }}"
+    mode: 0755
+
+# by default, /usr/bin/hotrod is a symlink to /opt/hotrod/hotrod
+
+- name: "[install_binary] symlink ({{ hotrod_binary_install_path }} -> {{ hotrod_binary_system_path }})"
+  ansible.builtin.file:
+    src: "{{ hotrod_binary_install_path }}"
+    dest: "{{ hotrod_binary_system_path }}"
+    owner: "{{ hotrod_system_user }}"
+    group: "{{ hotrod_system_group }}"
+    state: link
+
+############################################## cleanup
+
+- name: "[install_binary] Remove temp directory"
+  file:
+    path: "{{ hotrod_temp_dir.path }}"
+    state: "absent"
+  delegate_to: 127.0.0.1
+
+############################################## verification
+
+- name: "[install_binary] verify paths"
+  assert:
+    quiet: true
+    fail_msg: "Could not verify expected paths, files and symlinks"
+    that:
+      - "hotrod_binary_install_directory is directory"
+      - "hotrod_binary_install_path is file"
+      - "hotrod_binary_system_path is link"
+
+############################################## get hotrod version
+
+- name: "[install_binary] get hotrod version"
+  ansible.builtin.command:
+    argv:
+      - "{{ hotrod_binary_system_path }}"
+      - "--version"
+  register: cmd_hotrod_version
+
+
+- name: "[install_binary] set hotrod version as fact"
+  set_fact:
+    # hotrod 3.2.0-dev   (build timestamp: 2022-09-21T12:59:43.386847239+00:00)
+    hotrod_installed_version: "{{ cmd_hotrod_version.stdout | regex_search('^hotrod ([0-9\\.\\-a-z]+) ', '\\1')}}"
+    # 3.2.0-dev
+
+
+- name: "[install_binary] show version"
+  debug:
+    msg: "Installed hotrod version: {{ hotrod_installed_version | join('') }}"

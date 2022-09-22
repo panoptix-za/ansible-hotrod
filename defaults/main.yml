@@ -1,0 +1,130 @@
+#################################################### Control variables
+
+# CDN download location of the compressed Hotrod binary
+hotrod_download_uri: ""
+
+# CDN download location of the sha1 hash
+hotrod_download_uri_sha1: "{{ hotrod_download_uri }}.sha1"
+
+# whether to install the hotrod binary
+hotrod_install_binary: no
+
+# whether to install Hotrod server (implies hotrod_install_binary=yes)
+hotrod_install_server: no
+
+# whether to install Hotrod agent (implies hotrod_install_binary=yes)
+hotrod_install_agent: no
+
+# the system user name for Hotrod
+hotrod_system_user: hotrod
+
+# the system user group for Hotrod
+hotrod_system_group: hotrod
+
+# !! DANGER ZONE !! uninstall options.
+#   using these settings will remove data directories!
+#   Mutually exclusive with any hotrod_install_* options enabled.
+hotrod_remove_agent: no
+hotrod_remove_server: no
+hotrod_remove_binary: no
+
+#################################################### Install: binary
+
+# the directory in which Hotrod's binary is installed
+hotrod_binary_install_directory: /opt/hotrod
+
+# the location (and name) of the downloaded Hotrod binary
+hotrod_binary_install_path: "{{ hotrod_binary_install_directory }}/hotrod"
+
+# this value creates a symbolic link which points to hotrod_binary_install_path,
+# such that:
+#   hotrod_binary_system_path -> hotrod_binary_install_path
+#
+# This path should be accessible in PATH
+hotrod_binary_system_path: /usr/bin/hotrod
+
+#################################################### Install: server
+
+# if not provided, Hotrod server will generate a random admin password on FIRST startup
+# must be at least 8 characters, otherwise the value is ignored
+hotrod_server_admin_init_password: ""
+
+# where to store Hotrod server's data files
+hotrod_server_staging_dir: /var/lib/hotrod-server
+
+# the server's API and UI will be exposed on this network address and port
+hotrod_server_bind_address: 127.0.0.1:3000
+
+# Hotrod server automatically prunes log and metric data older than this number of days
+#   bigger values needs more disk space
+hotrod_server_log_retention_days: 30
+
+# explicitly accept the EULA when prompted at first startup
+#   required so that the server does not prompt when started by systemd
+hotrod_server_license_eula_accept: "yes"
+
+hotrod_server_enable_server_agent: yes
+
+# If given, sets the auto-enrollment key for the server
+hotrod_server_auto_enrollment_key: ""
+
+# location of the server's systemd service file
+hotrod_server_systemd_unit_name: hotrod-server.service
+hotrod_server_systemd_unit_path: /lib/systemd/system/{{ hotrod_server_systemd_unit_name }}
+
+#################################################### Install: agent
+
+# agent ID to use for the installed agent
+#   should NOT contain whitespace or special characters apart from dashes
+# Environment variable: HOTROD_AGENT_ID
+hotrod_agent_id: "agent1"
+
+# Environment variable: HOTROD_AGENT_NAME
+hotrod_agent_name: "{{ hotrod_agent_id }}"
+
+# specify the auto enrollment key, if used by the server.
+#   takes precedence over hotrod_agent_api_key if given
+#   defaults to hotrod_server_auto_enrollment_key
+hotrod_agent_auto_enrollment_key: "{{ hotrod_server_auto_enrollment_key }}"
+
+# Environment variable: HOTROD_AGENT_API_KEY
+hotrod_agent_api_key: ""
+
+# Environment variable: HOTROD_AGENT_LISTENER
+hotrod_agent_listen_address: "127.0.0.1:4040"
+
+# Environment variable: HOTROD_PIPES_DIR
+hotrod_agent_pipes_dir: "/var/lib/hotrod-agent-{{hotrod_agent_id}}"
+
+# Environment variable: HOTROD_URL
+hotrod_agent_server_url: "http://{{ hotrod_server_bind_address }}"
+
+# Environment variable: HOTROD_AGENT_POLL_INTERVAL
+hotrod_agent_poll_interval: "15"
+
+# Environment variable: HOTROD_AGENT_TAGS
+hotrod_agent_tags: ""
+
+# Used as the agent's --logs-interval option
+hotrod_agent_logs_interval: "5"
+
+# --metrics-interval=60
+hotrod_agent_metrics_interval: "60"
+
+# makes the agent use the systemd-based pipe scheduler (hotrod run agent --systemd-pipe-scheduler)
+hotrod_agent_scheduler_systemd: yes
+
+# makes the agent use the internal pipe scheduler (hotrod run agent --agent-pipe-scheduler)
+hotrod_agent_scheduler_agent: no
+
+# where to place Hotrod agent's systemd unit file
+hotrod_agent_systemd_unit_name: "hotrod-agent-{{hotrod_agent_id}}.service"
+hotrod_agent_systemd_unit_path: "/lib/systemd/system/{{ hotrod_agent_systemd_unit_name }}"
+
+#################################################### Role internals
+
+# OS support matrix for this role
+os_supported_matrix:
+  Ubuntu:
+    min_version: "18.04"
+    max_version: "20.04"

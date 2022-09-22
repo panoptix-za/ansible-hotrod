@@ -1,0 +1,29 @@
+[Unit]
+Description=hotrod-server
+
+[Service]
+{% if hotrod_server_admin_init_password is defined and hotrod_server_admin_init_password | length >= 8 -%}
+    Environment=HOTROD_ADMIN_INIT_PASSWORD="{{ hotrod_server_admin_init_password }}"
+{% endif %}
+Environment=HOTROD_STAGING_DIR={{ hotrod_server_staging_dir }}
+Environment=HOTROD_BIND_ADDRESS={{ hotrod_server_bind_address }}
+Environment=HOTROD_LOG_RETENTION_DAYS={{ hotrod_server_log_retention_days }}
+{% if hotrod_server_license_eula_accept == "yes" -%} 
+    Environment=HOTROD_LICENSE_EULA_ACCEPT=yes
+{% endif %}
+{% if hotrod_server_auto_enrollment_key is defined and hotrod_server_auto_enrollment_key | length > 0 -%}
+    Environment=HOTROD_AUTO_ENROLLMENT_KEY="{{ hotrod_server_auto_enrollment_key }}"
+{% endif %}
+
+User={{ hotrod_system_user }}
+Group={{ hotrod_system_group }}
+
+Restart=on-failure
+{% if hotrod_server_enable_server_agent|bool == true -%}
+    ExecStart={{ hotrod_binary_system_path }} run stand-alone
+{% else -%}
+    ExecStart={{ hotrod_binary_system_path }} run server
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+# File: 92.remove_binary.yml - remove the Hotrod binary
+
+############################################## remove binary on target system
+
+- name: "[install_binary] remove symlink: {{ hotrod_binary_system_path }}"
+  when: "hotrod_binary_system_path is link"
+  ansible.builtin.file:
+    path: "{{ hotrod_binary_system_path }}"
+    state: absent
+
+- name: "[install_binary] remove install directory"
+  ansible.builtin.file:
+    path: "{{hotrod_binary_install_directory}}"
+    state: absent

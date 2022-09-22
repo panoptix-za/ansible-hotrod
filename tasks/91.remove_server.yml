@@ -1,0 +1,22 @@
+# 91.remove_server.yml - remove Hotrod server
+
+- name: "[remove_server] stop and disable systemd service"
+  ignore_errors: true
+  when: "hotrod_server_systemd_unit_path is file"
+  ansible.builtin.systemd:
+    name: "{{ hotrod_server_systemd_unit_name }}"
+    state: stopped
+    enabled: no
+    daemon_reload: yes
+
+- name: "[remove_server] remove systemd service file"
+  when: "hotrod_server_systemd_unit_path is file"
+  file:
+    path: "{{ hotrod_server_systemd_unit_path }}"
+    state: absent
+
+- name: "[remove_server] remove staging directory"
+  when: "hotrod_server_staging_dir is directory"
+  file:
+    path: "{{ hotrod_server_staging_dir }}"
+    state: absent

@@ -1,0 +1,34 @@
+# 40.install_agent.yml - install and configure Hotrod agent
+
+- name: "[install_agent] create pipes directory"
+  file:
+    path: "{{ hotrod_agent_pipes_dir }}"
+    state: directory
+    owner: "{{hotrod_system_user}}"
+    group: "{{hotrod_system_group}}"
+    mode: "u=rwx,g=rx,o=r"
+
+
+- name: "[install_agent] create systemd service file"
+  template:
+    src: templates/hotrod-agent.service
+    dest: "{{ hotrod_agent_systemd_unit_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart hotrod agent
+
+
+- name: "[install_agent] enable systemd service"
+  ansible.builtin.systemd:
+    name: "{{ hotrod_agent_systemd_unit_name }}"
+    enabled: yes
+    daemon_reload: yes
+
+
+- name: "[install_agent] start systemd service"
+  ansible.builtin.systemd:
+    name: "{{ hotrod_agent_systemd_unit_name }}"
+    state: started
+    daemon_reload: yes

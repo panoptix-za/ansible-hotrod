@@ -1,0 +1,13 @@
+- name: restart hotrod server
+  ansible.builtin.systemd:
+    name: hotrod-server
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+
+- name: restart hotrod agent
+  ansible.builtin.systemd:
+    name: "{{ hotrod_agent_systemd_unit_name }}"
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

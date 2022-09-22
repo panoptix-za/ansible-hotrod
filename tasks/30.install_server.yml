@@ -1,0 +1,34 @@
+# 30.install_server.yml - install and configure Hotrod server
+
+- name: "[install_server] create staging directory"
+  file:
+    path: "{{ hotrod_server_staging_dir }}"
+    state: directory
+    owner: "{{hotrod_system_user}}"
+    group: "{{hotrod_system_group}}"
+    mode: "u=rwx,g=rx,o=r"
+
+
+- name: "[install_server] create systemd service file"
+  template:
+    src: templates/hotrod-server.service
+    dest: "{{ hotrod_server_systemd_unit_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart hotrod server
+
+
+- name: "[install_server] enable systemd service"
+  ansible.builtin.systemd:
+    name: "{{ hotrod_server_systemd_unit_name }}"
+    enabled: yes
+    daemon_reload: yes
+
+
+- name: "[install_server] start systemd service"
+  ansible.builtin.systemd:
+    name: "{{ hotrod_server_systemd_unit_name }}"
+    state: started
+    daemon_reload: yes

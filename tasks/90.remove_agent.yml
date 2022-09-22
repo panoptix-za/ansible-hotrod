@@ -1,0 +1,22 @@
+# 90.remove_agent.yml - remove Hotrod agent
+
+- name: "[remove_agent] stop and disable systemd service"
+  ignore_errors: true
+  when: "hotrod_agent_systemd_unit_path is file"
+  ansible.builtin.systemd:
+    name: "{{ hotrod_agent_systemd_unit_name }}"
+    state: stopped
+    enabled: no
+    daemon_reload: yes
+
+- name: "[remove_agent] remove systemd service file"
+  when: "hotrod_agent_systemd_unit_path is file"
+  file:
+    path: "{{ hotrod_agent_systemd_unit_path }}"
+    state: absent
+
+- name: "[remove_agent] remove pipes directory"
+  when: "hotrod_agent_pipes_dir is directory"
+  file:
+    path: "{{ hotrod_agent_pipes_dir }}"
+    state: absent

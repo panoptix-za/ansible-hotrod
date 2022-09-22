@@ -1,0 +1,138 @@
+### 00.preflight.yml - initial checks
+
+############################################## check OS distributition & major version
+
+- name: "[preflight] Check OS distribution"
+  no_log: true
+  assert:
+    quiet: true
+    fail_msg: "{{ ansible_distribution }} is not supported for this role"
+    that:
+      - ansible_distribution in os_supported_matrix
+
+- name: "[preflight] Get OS distribution version"
+  no_log: true
+  set_fact:
+    min_version: "{{ item.value.min_version }}"
+    max_version: "{{ item.value.max_version }}"
+  loop: "{{ lookup('dict', os_supported_matrix, wantlist=True) }}"
+  when:
+    - ansible_distribution in item.key
+
+- name: "[preflight] Check min OS version"
+  no_log: true
+  assert:
+    quiet: true
+    fail_msg: "{{ ansible_distribution_version }} is not supported for this role"
+    that:
+      - ansible_distribution_version is version('{{ min_version }}', '>=')
+  when:
+    - min_version is defined
+    - min_version | length > 0
+
+- name: "[preflight] Check max OS version"
+  no_log: true
+  assert:
+    quiet: true
+    fail_msg: "{{ ansible_distribution_version }} is not supported for this role"
+    that:
+      - ansible_distribution_version is version('{{ max_version }}', '<=')
+  when:
+    - max_version is defined
+    - max_version | length > 0
+
+############################################## check remove options
+
+- name: "[preflight] check install settings: agent"
+  when:
+    - "hotrod_remove_agent | bool == true"
+  assert:
+    fail_msg: "hotrod_remove_agent=yes conflicts with hotrod_install_agent=yes"
+    that:
+      - "hotrod_install_agent|bool == false"
+
+- name: "[preflight] check install settings: server"
+  when:
+    - "hotrod_remove_server | bool == true"
+  assert:
+    fail_msg: "hotrod_remove_server=yes conflicts with hotrod_install_server=yes"
+    that:
+      - "hotrod_install_server | bool == false"
+
+- name: "[preflight] check install settings: binary"
+  when:
+    - "hotrod_remove_binary | bool == true"
+  assert:
+    fail_msg: "hotrod_remove_binary=yes conflicts with hotrod_install_*=yes"
+    that:
+      - "hotrod_install_binary | bool == false"
+      - "hotrod_install_server | bool == false"
+      - "hotrod_install_agent | bool == false"
+
+############################################## download config
+
+# check hotrod_download_uri for any install action
+
+- name: "[preflight] check hotrod_download_uri"
+  when:
+    - "hotrod_install_binary | bool == true or hotrod_install_server | bool == true or hotrod_install_agent | bool == true"
+  assert:
+    fail_msg: "please provide a value for the 'hotrod_download_uri' var"
+    that:
+      - "hotrod_download_uri is defined"
+      - "hotrod_download_uri | length > 0"
+
+############################################## agent checks
+
+# general agent checks
+
+- when:
+    - "hotrod_install_agent | bool == true"
+  block:
+    - name: "[preflight] agent: check authentication"
+      assert:
+        fail_msg: "Either hotrod_agent_api_key or hotrod_agent_auto_enrollment_key is required"
+        that:
+          - "hotrod_agent_api_key | length > 0 or hotrod_agent_auto_enrollment_key | length > 0"
+
+# auto-enrollment checks
+
+- when:
+    - "hotrod_install_agent | bool == true"
+    - "hotrod_agent_auto_enrollment_key or hotrod_agent_auto_enrollment_key | length > 0"
+  block:
+    - name: "[preflight] agent: api key and auto-enrollment key are mutually exclusive"
+      assert:
+        fail_msg: "Cannot provide API key when using auto-enrollment key"
+        that:
+          - "not hotrod_agent_api_key or hotrod_agent_api_key | length < 0"
+
+    - name: "[preflight] agent: name is specified when using auto-enrollment"
+      assert:
+        fail_msg: "Agent name is required when using auto enrollment key"
+        that:
+          - "hotrod_agent_name or hotrod_agent_name | length > 0"
+
+    - name: "[preflight] agent: agent ID is not specified with auto-enrollment"
+      assert:
+        fail_msg: "Agent ID cannot be specified when using auto enrollment key"
+        that:
+          - "not hotrod_agent_id or hotrod_agent_id | length < 0"
+
+# manual api-key auth checks
+
+- when:
+    - "hotrod_install_agent | bool == true"
+    - "hotrod_agent_api_key or hotrod_agent_api_key | length > 0"
+  block:
+    - name: "[preflight] agent: api key and auto-enrollment key are mutually exclusive"
+      assert:
+        fail_msg: "Cannot specify auto-enrollment key when an API key is given"
+        that:
+          - "not hotrod_agent_auto_enrollment_key or hotrod_agent_auto_enrollment_key | length < 0"
+
+    - name: "[preflight] agent: check that ID is set for API key authentication"
+      assert:
+        fail_msg: "Agent ID is required when using API key authentication"
+        that:
+          - "hotrod_agent_id | length > 0"

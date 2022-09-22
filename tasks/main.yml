@@ -1,0 +1,58 @@
+### main.yml - role task entry point
+
+# preflight checks must succeed before any system changes
+
+- name: preflight checks
+  include_tasks: 00.preflight.yml
+
+# any install requires system user and hotrod binary
+
+- name: Create system user and group
+  when: hotrod_install_binary|bool == true or hotrod_install_server|bool == true or hotrod_install_agent|bool == true
+  include_tasks: 10.system_user.yml
+
+# any install requires hotrod binary
+
+- name: Install Hotrod Binary
+  when: hotrod_install_binary|bool == true or hotrod_install_server|bool == true or hotrod_install_agent|bool == true
+  include_tasks: 20.install_binary.yml
+
+# server install's dedicated task list
+
+- name: Install Hotrod server
+  when: hotrod_install_server|bool == true
+  include_tasks: 30.install_server.yml
+
+# agent install's dedicated task list
+
+- name: Install Hotrod agent
+  when: hotrod_install_agent | bool
+  include: 40.install_agent.yml
+
+# remove agent
+
+- name: Remove Hotrod agent
+  when:
+    - hotrod_remove_agent|bool == true and hotrod_install_agent|bool == false
+  include_tasks: 90.remove_agent.yml
+
+- name: Remove Hotrod server
+  when:
+    - hotrod_remove_server|bool == true and hotrod_install_server|bool == false
+  include_tasks: 91.remove_server.yml
+
+- name: Remove Hotrod binary
+  when:
+    - hotrod_remove_binary|bool == true
+    - hotrod_install_binary|bool == false
+    - hotrod_install_server|bool == false
+    - hotrod_install_agent|bool == false
+  include_tasks: 92.remove_binary.yml
+
+- name: Remove Hotrod system user and group
+  when:
+    - hotrod_remove_binary|bool == true
+    - hotrod_install_binary|bool == false
+    - hotrod_install_server|bool == false
+    - hotrod_install_agent|bool == false
+  include_tasks: 93.remove_user.yml
