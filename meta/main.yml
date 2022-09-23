@@ -1,0 +1,34 @@
+galaxy_info:
+  role_name: hotrod
+  description: Install and configure Hotrod
+  
+  author: Panoptix
+  company: Panoptix
+
+  issue_tracker_url: https://github.com/panoptix-za/ansible-hotrod/issues
+
+  license: MIT
+
+  min_ansible_version: "2.9"
+
+  # See https://galaxy.ansible.com/api/v1/platforms/
+  platforms:
+    - name: Ubuntu
+      versions:
+        # 18.04
+        - bionic
+        # 20.04
+        - focal
+        # 22.04
+        - jammy
+
+  # single word comprised of alphanumeric characters, < 20 per role
+  galaxy_tags:
+    - "hotrod"
+    - "integration"
+    - "monitoring"
+    - "metrics"
+    - "collector"
+    - "ubuntu"
+
+dependencies: []
