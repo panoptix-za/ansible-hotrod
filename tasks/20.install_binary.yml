@@ -48,6 +48,9 @@
     owner: "{{ hotrod_system_user }}"
     group: "{{ hotrod_system_group }}"
     mode: 0755
+  notify:
+    - restart hotrod server
+    - restart hotrod agent
 
 # by default, /usr/bin/hotrod is a symlink to /opt/hotrod/hotrod
 

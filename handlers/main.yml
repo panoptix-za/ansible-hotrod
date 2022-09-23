@@ -1,4 +1,7 @@
 - name: restart hotrod server
+  when:
+    - hotrod_install_server|bool
+    - hotrod_server_systemd_unit_path is file
   ansible.builtin.systemd:
     name: hotrod-server
     state: restarted
@@ -6,6 +9,9 @@
     daemon_reload: yes
 
 - name: restart hotrod agent
+  when:
+    - hotrod_install_agent|bool
+    - hotrod_agent_systemd_unit_path is file
   ansible.builtin.systemd:
     name: "{{ hotrod_agent_systemd_unit_name }}"
     state: restarted
