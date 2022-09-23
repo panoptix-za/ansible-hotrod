@@ -4,6 +4,10 @@ This Ansible role installs and configures the Hotrod binary, Hotrod server and H
 
 See Hotrod's [installation guide](https://hotrod.app/docs/install/overview), and [environment variables](https://hotrod.app/docs/reference/environment_variables).
 
+## Licence
+
+This Ansible role is made available under the MIT license. The use of Hotrod is subject to the Panoptix [End User License Agreement](https://hotrod.app/eula).
+
 ## Supported Systems
 
 This role supports Ubuntu 18.04 and 20.04.
@@ -74,7 +78,3 @@ Note that:
 - `hotrod_remove_*` are mutually exclusive with their `hotrod_install_*` counterparts
 - `hotrod_system_user` and `hotrod_system_group` will only be removed if both values match "`hotrod`", to avoid undesirable effects when using non-defaults
 - `hotrod_remove_server` and `hotrod_remove_agent` will **destroy data directories!**
-
-## Licence
-
-While this Ansible role is made available under the MIT license, note that the use of Hotrod is subject to the Panoptix [End User License Agreement](https://hotrod.app/eula).
