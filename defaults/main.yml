@@ -121,6 +121,13 @@ hotrod_agent_scheduler_agent: no
 hotrod_agent_systemd_unit_name: "hotrod-agent-{{hotrod_agent_id}}.service"
 hotrod_agent_systemd_unit_path: "/lib/systemd/system/{{ hotrod_agent_systemd_unit_name }}"
 
+# extra CLI arguments for agent startup. Do not include:
+#     --systemd-pipe-scheduler
+#     --agent-pipe-scheduler
+#     --logs-interval
+#     --metrics-interval
+hotrod_agent_additional_cli_args: ""
+
 #################################################### Role internals
 
 # OS support matrix for this role

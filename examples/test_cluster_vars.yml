@@ -55,3 +55,10 @@ hotrod_agent_systemd_unit_path: "/lib/systemd/system/{{ hotrod_agent_systemd_uni
 # secrets (these 2 authentication options are mutually exclusive)
 hotrod_agent_auto_enrollment_key: "{{ hotrod_server_auto_enrollment_key }}"
 hotrod_agent_api_key: ""
+
+# extra CLI arguments for agent startup. Do not include:
+#     --systemd-pipe-scheduler
+#     --agent-pipe-scheduler
+#     --logs-interval
+#     --metrics-interval
+hotrod_agent_additional_cli_args: ""

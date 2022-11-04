@@ -35,3 +35,4 @@
     hotrod_agent_scheduler_agent: no
     hotrod_agent_systemd_unit_name: "hotrod-agent-{{hotrod_agent_name}}.service"
     hotrod_agent_systemd_unit_path: "/lib/systemd/system/{{ hotrod_agent_systemd_unit_name }}"
+    hotrod_agent_additional_cli_args: ""

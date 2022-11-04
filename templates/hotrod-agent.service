@@ -31,6 +31,9 @@ Group={{ hotrod_system_group }}
 
 Restart=on-failure
 ExecStart={{ hotrod_binary_system_path }} run agent \
+{% if hotrod_agent_additional_cli_args | length > 0 %}
+    {{ hotrod_agent_additional_cli_args }} \
+{% endif%}
 {% if hotrod_agent_scheduler_systemd | bool == true %}
     --systemd-pipe-scheduler \
 {% elif hotrod_agent_scheduler_agent | bool == true %}
@@ -40,6 +43,7 @@ ExecStart={{ hotrod_binary_system_path }} run agent \
 {% endif %}
     --logs-interval={{ hotrod_agent_logs_interval }} \
     --metrics-interval={{ hotrod_agent_metrics_interval }}
+
 
 [Install]
 WantedBy=multi-user.target
