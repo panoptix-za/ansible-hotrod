@@ -10,7 +10,7 @@ This Ansible role is made available under the MIT license. The use of Hotrod is 
 
 ## Supported Systems
 
-This role supports Ubuntu 18.04 and 20.04.
+This role supports Ubuntu 18.04, 20.04 and 22.10
 
 `./tasks/preflight.yml` will abort the playbook if the target system is not supported.
 
