@@ -82,6 +82,16 @@
       - "hotrod_download_uri is defined"
       - "hotrod_download_uri | length > 0"
 
+############################################## server checks
+
+- name: "[preflight] check hotrod_server_enable_server_agent"
+  when:
+    - "hotrod_server_enable_server_agent is defined"
+  assert:
+    fail_msg: "As of Hotrod 3.5.0, hotrod_server_enable_server_agent can not be set to false"
+    that:
+      - hotrod_server_enable_server_agent | bool == true
+
 ############################################## agent checks
 
 # general agent checks
@@ -117,7 +127,8 @@
       assert:
         fail_msg: "Agent ID cannot be specified when using auto enrollment key"
         that:
-          - "not hotrod_agent_id or hotrod_agent_id | length < 0"
+          # - "hotrod_agent_id and hotrod_agent_id or hotrod_agent_id | length > 0"
+          - not hotrod_agent_id
 
 # manual api-key auth checks
 
