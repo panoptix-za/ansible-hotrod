@@ -55,6 +55,14 @@ hotrod_server_staging_dir: /var/lib/hotrod-server
 # the server's API and UI will be exposed on this network address and port
 hotrod_server_bind_address: 127.0.0.1:3000
 
+# Bind address of the server's internl agent TCP socket
+# Environment variable: HOTROD_AGENT_LISTENER
+hotrod_server_agent_listener_address: 127.0.0.1:3040
+
+# Bind address of the server's internal agent's HTTP API
+# Environment variable: HOTROD_AGENT_API_BIND_ADDRESS
+hotrod_server_agent_bind_address: 127.0.0.1:3041
+
 # Hotrod server automatically prunes log and metric data older than this number of days
 #   bigger values needs more disk space
 hotrod_server_log_retention_days: 30
@@ -63,6 +71,7 @@ hotrod_server_log_retention_days: 30
 #   required so that the server does not prompt when started by systemd
 hotrod_server_license_eula_accept: "yes"
 
+# As of Hotrod 3.5.0, server agent is not optional
 hotrod_server_enable_server_agent: yes
 
 # If given, sets the auto-enrollment key for the server
@@ -92,6 +101,9 @@ hotrod_agent_api_key: ""
 
 # Environment variable: HOTROD_AGENT_LISTENER
 hotrod_agent_listen_address: "127.0.0.1:4040"
+
+# Environment variable: HOTROD_AGENT_API_BIND_ADDRESS=
+hotrod_agent_api_bind_address: "127.0.0.1:4041"
 
 # Environment variable: HOTROD_PIPES_DIR
 hotrod_agent_pipes_dir: "/var/lib/hotrod-agent-{{hotrod_agent_id}}"
@@ -135,3 +147,4 @@ os_supported_matrix:
   Ubuntu:
     min_version: "18.04"
     max_version: "20.04"
+    max_version: "22.10"
