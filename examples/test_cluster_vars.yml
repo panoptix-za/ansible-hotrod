@@ -22,7 +22,10 @@ hotrod_binary_system_path: /usr/bin/hotrod
 ##################### Hotrod server
 
 hotrod_server_staging_dir: /var/lib/hotrod-server
+
+# Set in play
 hotrod_server_bind_address: 127.0.0.1:3000
+
 hotrod_server_log_retention_days: 30
 hotrod_server_systemd_unit_name: hotrod-server.service
 hotrod_server_systemd_unit_path: /lib/systemd/system/{{ hotrod_server_systemd_unit_name }}
