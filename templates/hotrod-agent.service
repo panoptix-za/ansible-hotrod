@@ -4,14 +4,18 @@ Description=hotrod-agent-{{hotrod_agent_id}}
 [Service]
 
 Environment=HOTROD_URL={{ hotrod_agent_server_url }}
-{% if hotrod_agent_id is defined and hotrod_agent_id | length > 0 -%}
+{% if hotrod_agent_id is defined and hotrod_agent_id is string and hotrod_agent_id | length > 0 -%}
     Environment=HOTROD_AGENT_ID={{ hotrod_agent_id }}
 {% endif %}
-{% if hotrod_agent_name is defined and hotrod_agent_name | length > 0 -%}
+{% if hotrod_agent_name is defined and hotrod_agent_name is string and hotrod_agent_name | length > 0 -%}
     Environment=HOTROD_AGENT_NAME={{ hotrod_agent_name }}
 {% endif %}
 
 Environment=HOTROD_AGENT_LISTENER={{ hotrod_agent_listen_address }}
+{% if hotrod_agent_api_bind_address is defined and hotrod_agent_api_bind_address | length > 0 -%}
+    Environment=HOTROD_AGENT_API_BIND_ADDRESS={{ hotrod_agent_api_bind_address }}
+{% endif %}
+
 Environment=HOTROD_PIPES_DIR={{ hotrod_agent_pipes_dir }}
 Environment=HOTROD_AGENT_POLL_INTERVAL={{ hotrod_agent_poll_interval }}
 {% if hotrod_agent_tags is defined and hotrod_agent_tags | length > 0 -%}
@@ -34,9 +38,9 @@ ExecStart={{ hotrod_binary_system_path }} run agent \
 {% if hotrod_agent_additional_cli_args | length > 0 %}
     {{ hotrod_agent_additional_cli_args }} \
 {% endif%}
-{% if hotrod_agent_scheduler_systemd | bool == true %}
+{% if hotrod_agent_scheduler_systemd %}
     --systemd-pipe-scheduler \
-{% elif hotrod_agent_scheduler_agent | bool == true %}
+{% elif hotrod_agent_scheduler_agent %}
     --agent-pipe-scheduler \
 {% else %}
     --agent-pipe-scheduler \

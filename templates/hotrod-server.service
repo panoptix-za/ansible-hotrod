@@ -7,6 +7,12 @@ Description=hotrod-server
 {% endif %}
 Environment=HOTROD_STAGING_DIR={{ hotrod_server_staging_dir }}
 Environment=HOTROD_BIND_ADDRESS={{ hotrod_server_bind_address }}
+{% if hotrod_server_agent_listener_address is defined -%}
+    Environment=HOTROD_AGENT_LISTENER="{{ hotrod_server_agent_listener_address }}"
+{% endif %}
+{% if hotrod_server_agent_bind_address is defined -%}
+    Environment=HOTROD_AGENT_API_BIND_ADDRESS="{{ hotrod_server_agent_bind_address }}"
+{% endif %}
 Environment=HOTROD_LOG_RETENTION_DAYS={{ hotrod_server_log_retention_days }}
 {% if hotrod_server_license_eula_accept == "yes" -%} 
     Environment=HOTROD_LICENSE_EULA_ACCEPT=yes
@@ -19,11 +25,7 @@ User={{ hotrod_system_user }}
 Group={{ hotrod_system_group }}
 
 Restart=on-failure
-{% if hotrod_server_enable_server_agent|bool == true -%}
-    ExecStart={{ hotrod_binary_system_path }} run stand-alone
-{% else -%}
-    ExecStart={{ hotrod_binary_system_path }} run server
-{% endif %}
+ExecStart={{ hotrod_binary_system_path }} run server
 
 [Install]
 WantedBy=multi-user.target
