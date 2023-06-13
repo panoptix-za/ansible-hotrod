@@ -31,7 +31,8 @@
   vars:
     # server
     hotrod_install_server: yes
-    hotrod_server_enable_server_agent: no
+    hotrod_server_agent_listener_address: 127.0.0.1:3040
+    hotrod_server_agent_bind_address: 127.0.0.1:3041
 
 # play 2
 
@@ -45,20 +46,6 @@
     # agent1
     hotrod_install_agent: yes
     hotrod_agent_name: "agent1"
-    hotrod_agent_listen_address: "127.0.0.1:4041"
-    hotrod_agent_tags: "local"
-
-# play 3
-
-- name: Install agent2, alongside server
-  hosts: localhost
-  roles:
-    - hotrod
-  vars_files:
-    - test_cluster_vars.yml
-  vars:
-    # agent2
-    hotrod_install_agent: yes
-    hotrod_agent_name: "agent2"
-    hotrod_agent_listen_address: "127.0.0.1:4042"
+    hotrod_agent_listen_address: "127.0.0.1:4040"
+    hotrod_agent_api_bind_address: "127.0.0.1:4041"
     hotrod_agent_tags: "local"
