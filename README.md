@@ -2,11 +2,11 @@
 
 This Ansible role installs and configures the Hotrod binary, Hotrod server and Hotrod agents.
 
-See Hotrod's [installation guide](https://hotrod.app/docs/install/overview), and [environment variables](https://hotrod.app/docs/reference/environment_variables).
+See Hotrod's [installation guide](https://docs.hotrod-inc.com/docs/install/overview), and [environment variables](https://docs.hotrod-inc.com/docs/reference/environment_variables).
 
 ## Licence
 
-This Ansible role is made available under the MIT license. The use of Hotrod is subject to the Panoptix [End User License Agreement](https://hotrod.app/eula).
+This Ansible role is made available under the MIT license. The use of Hotrod is subject to the Panoptix [End User License Agreement](https://docs.hotrod-inc.com/eula).
 
 ## Supported Systems
 
@@ -18,7 +18,7 @@ This role supports Ubuntu 18.04, 20.04 and 22.10
 
 See [./exampes](./examples) for installing different Hotrod components, as well as a test cluster setup.
 
-All examples requires a value for `hotrod_download_uri`. See [downloads](https://hotrod.app/docs/install/download).
+All examples requires a value for `hotrod_download_uri`. See [downloads](https://docs.hotrod-inc.com/docs/install/download).
 
 ## Variables
 
@@ -27,7 +27,7 @@ All examples requires a value for `hotrod_download_uri`. See [downloads](https:/
 **`hotrod_download_uri`**
 (Default: none)
 
-The URI of the Hotrod binary release to download, which determines the installed version. See [downloads](https://hotrod.app/docs/install/download) for obtaining this URI.
+The URI of the Hotrod binary release to download, which determines the installed version. See [downloads](https://docs.hotrod-inc.com/docs/install/download) for obtaining this URI.
 
 **`hotrod_download_uri_sha1`**
 (Default: `{{ hotrod_download_uri }}.sha1`)

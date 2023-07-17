@@ -109,13 +109,13 @@
 
 - when:
     - "hotrod_install_agent | bool == true"
-    - "hotrod_agent_auto_enrollment_key or hotrod_agent_auto_enrollment_key | length > 0"
+    - "hotrod_agent_auto_enrollment_key or (hotrod_agent_auto_enrollment_key is string and hotrod_agent_auto_enrollment_key | length > 0)"
   block:
     - name: "[preflight] agent: api key and auto-enrollment key are mutually exclusive"
       assert:
         fail_msg: "Cannot provide API key when using auto-enrollment key"
         that:
-          - "not hotrod_agent_api_key or hotrod_agent_api_key | length < 0"
+          - "not hotrod_agent_api_key or (hotrod_agent_api_key is defined and hotrod_agent_api_key is string and hotrod_agent_api_key | length < 1)"
 
     - name: "[preflight] agent: name is specified when using auto-enrollment"
       assert:

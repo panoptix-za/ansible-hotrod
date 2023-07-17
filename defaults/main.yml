@@ -146,5 +146,4 @@ hotrod_agent_additional_cli_args: ""
 os_supported_matrix:
   Ubuntu:
     min_version: "18.04"
-    max_version: "20.04"
     max_version: "22.10"

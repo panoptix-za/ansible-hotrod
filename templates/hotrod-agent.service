@@ -22,7 +22,7 @@ Environment=HOTROD_AGENT_POLL_INTERVAL={{ hotrod_agent_poll_interval }}
     Environment=HOTROD_AGENT_TAGS={{ hotrod_agent_tags }}
 {% endif %}
 
-{% if hotrod_agent_auto_enrollment_key is defined and hotrod_agent_auto_enrollment_key | length > 0 -%}
+{% if hotrod_agent_auto_enrollment_key is defined and hotrod_agent_auto_enrollment_key is string and hotrod_agent_auto_enrollment_key | length > 0 -%}
     Environment=HOTROD_AUTO_ENROLLMENT_KEY={{ hotrod_agent_auto_enrollment_key }}
 
 {% elif hotrod_agent_api_key is defined and hotrod_agent_api_key | length > 0 -%}
